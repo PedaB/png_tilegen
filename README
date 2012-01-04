@@ -1,6 +1,6 @@
-This is a little application that produces tiles for an OSM tile server
-out of a large png file. It was created to replace and speed up a script 
-that called convert.
+This is a little application that produces tiles for an OSM tile
+server out of a large png file. It was created to replace and speed up
+a script that called convert.
 
 == Compile ==
 
@@ -9,9 +9,18 @@ that called convert.
 
 == License ==
 
-To the extent possible under law, the author(s) have dedicated all copyright and 
-related and neighboring rights to this software to the public domain worldwide. 
-This software is distributed without any warranty.
+To the extent possible under law, the author(s) have dedicated all
+copyright and related and neighboring rights to this software to the
+public domain worldwide.  This software is distributed without any
+warranty.
  
 See http://creativecommons.org/publicdomain/zero/1.0/
 
+== Profiling ==
+
+The execution speed can be tweaked a little bit by changing the
+compression level for zlib (see sources). The default settings give a
+good performance with very small resulting tile sizes. Using
+Z_BEST_SPEED instead you get about 50% speedup with about 30% larger
+file sizes. Z_BEST_COMPRESSION is 3-4 times slower with only about 1%
+smaller file size.

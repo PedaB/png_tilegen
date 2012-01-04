@@ -1,0 +1,17 @@
+This is a little application that produces tiles for an OSM tile server
+out of a large png file. It was created to replace and speed up a script 
+that called convert.
+
+== Compile ==
+
+ $ cmake .
+ $ make
+
+== License ==
+
+To the extent possible under law, the author(s) have dedicated all copyright and 
+related and neighboring rights to this software to the public domain worldwide. 
+This software is distributed without any warranty.
+ 
+See http://creativecommons.org/publicdomain/zero/1.0/
+

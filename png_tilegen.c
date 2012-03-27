@@ -166,7 +166,7 @@ static void crop_image(img_t *img, int zoom, const char *out_dir) {
       snprintf(filename, 1024, "%s/%d/%d/%d.png", out_dir, zoom, tileX+u, tileY);
       ret = open_png_writer(filename, &writer[u]);
       if (ret) {
-        printf("Could not open file for writing! %d\n", ret);
+        printf("Could not open file \"%s\" for writing! %d\n", filename, ret);
         exit(ret);
       }
     }
@@ -223,11 +223,11 @@ static void scale_image(img_t *img) {
 void main(int argc, char **argv) {
   
   FILE *fp;
-  int ret, zoom;
+  int ret, zoom, tmp;
   img_t img;
   
   if (argc < 6) {
-    printf("Usage:\ntilegen <input.png> <output_dir> <tileX> <tileY> <max_zoom>\n");
+    printf("Usage:\ntilegen <input.png> <output_dir> <tileX> <tileY> <max_zoom> [cardinal_direction N|E|S|W]\n");
     exit(1);
   }
   
@@ -241,6 +241,34 @@ void main(int argc, char **argv) {
   img.tileX = atoi(argv[3]);
   img.tileY = atoi(argv[4]);
   zoom = atoi(argv[5]);
+
+  if (argc > 6) {
+    switch(argv[6][0]) {
+    case 'n':
+    case 'N':
+      // keep defaults
+      break;
+    case 'e':
+    case 'E':
+      tmp = img.tileX;
+      img.tileX = img.tileY;
+      img.tileY = (2<<12) - 1 - tmp;
+      break;
+    case 's':
+    case 'S':
+      img.tileX = (2<<12) - 1 - img.tileX;
+      img.tileY = (2<<12) - 1 - img.tileY;
+      break;
+    case 'w':
+    case 'W':
+      tmp = img.tileX;
+      img.tileX = (2<<12) - 1 - img.tileY;
+      img.tileY = tmp;
+      break;
+    default:
+      fprintf(stderr, "Unknown cardinal direction \"%s\". Default to north\n", argv[6]);
+    }
+  }
   
   while (1) {
   

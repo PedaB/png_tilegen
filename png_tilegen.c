@@ -33,6 +33,49 @@ static int isPowOfTwo(int v) {
   return !(v & (v-1));
 }
 
+static int read_int(FILE *fp) {
+  int k;
+  char ch;
+
+  do {
+    while (isspace(ch = getc(fp)));
+    if (ch == '#')
+      while ((ch = getc(fp)) != '\n');
+  } while (!isdigit(ch));
+
+  for (k = (ch - '0'); isdigit(ch = getc(fp)); k = 10 * k + (ch - '0'));
+
+  return k;
+}
+
+static int read_ppm(const char *file, img_t *img) {
+
+  FILE *fp;
+  char magic[3];
+  int w, h, max;
+
+  fp = fopen(file, "rb");
+  if (!fp) return 2;
+
+  fread(magic, 2, 1, fp);
+
+  if (strncmp(magic, "P6", 2) != 0) return 3;
+
+  w = read_int(fp);
+  h = read_int(fp);
+  max = read_int(fp);
+
+  if (max > 255) return 6;
+  if ((w != h) || !isPowOfTwo(w)) return 7;
+
+  img->size = w;
+  img->raw_data = malloc(w*w*sizeof(rgb_t));
+
+  fread(img->raw_data, sizeof(rgb_t), w*w, fp);
+
+  return 0;
+}
+
 static int read_png(const char *file, img_t *img) {
 
   FILE *fp;
@@ -232,7 +275,15 @@ void main(int argc, char **argv) {
   }
   
   printf("Read file \"%s\"\n", argv[1]);
-  ret = read_png(argv[1], &img);
+  if (strstr(argv[1], ".png"))
+    ret = read_png(argv[1], &img);
+  else if (strstr(argv[1], ".ppm"))
+    ret = read_ppm(argv[1], &img);
+  else {
+    printf("Unknown format!\n");
+    exit(2);
+  }
+
   if (ret) {
     printf("Could not read png input file! %d\n", ret);
     exit(ret);

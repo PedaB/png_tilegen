@@ -1,6 +1,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <ctype.h>
 
 #include <errno.h>
 #include <sys/stat.h>
@@ -72,6 +73,7 @@ static int read_ppm(const char *file, img_t *img) {
   img->sizeY = h;
   img->raw_data = malloc(w*h*sizeof(rgb_t));
 
+  // TODO: improve and use mmap
   fread(img->raw_data, sizeof(rgb_t), w*h, fp);
 
   return 0;
@@ -266,9 +268,8 @@ static void scale_image(img_t *img) {
   img->sizeY /= 2;
 }
 
-void main(int argc, char **argv) {
-  
-  FILE *fp;
+int main(int argc, char **argv) {
+
   int ret, zoom, tmp;
   img_t img;
   
@@ -338,4 +339,6 @@ void main(int argc, char **argv) {
     scale_image(&img);
     zoom--;
   }
+
+  return 0;
 }

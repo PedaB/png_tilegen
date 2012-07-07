@@ -1,6 +1,7 @@
 This is a little application that produces tiles for an OSM tile
-server out of a large png file. It was created to replace and speed up
-a script that called convert.
+server out of a large png or ppm file. It was created to replace 
+and speed up a script that called convert. If your binary is
+called jpg_tilegen it will output jpeg files instead of png files.
 
 == Compile ==
 

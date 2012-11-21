@@ -67,7 +67,7 @@ static FILE *open_packed_file(const char *output_dir, int tileX, int tileY) {
 
   snprintf(filename, 1024, "%s/packed/%d/%d.pack", output_dir, tileX, tileY);
   FILE *pf = fopen(filename, "wb");
-  fseek(pf, 1364*4, SEEK_SET);
+  fseek(pf, 1364*4, SEEK_CUR);
 
   return pf;
 }
@@ -109,6 +109,24 @@ static void crop_image(img_t *img, int base_offset, FILE *out) {
   }
 }
 
+static void save_image(img_t *img, char *output_dir) {
+  
+  char filename[1024];
+
+  // create the needed output directory if not present    
+  snprintf(filename, 1024, "%s/13/", output_dir);
+  mkdir(filename, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+
+  snprintf(filename, 1024, "%s/13/%d/", output_dir, img->tileX);
+  mkdir(filename, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+
+  snprintf(filename, 1024, "%s/13/%d/%d.png", output_dir, img->tileX, img->tileY);
+  FILE *file = fopen(filename, "wb");
+
+  crop_image(img, 6, file);
+
+  fclose(file);
+}
 
 
 int main(int argc, char **argv) {
@@ -183,7 +201,7 @@ int main(int argc, char **argv) {
     scale_image(&img);
 
     if (img.sizeX == TILE_SIZE) {
-      // TODO: Save one real png
+      save_image(&img, output_dir);
       break;
     }
   }

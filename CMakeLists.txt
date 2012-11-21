@@ -10,5 +10,7 @@ INCLUDE_DIRECTORIES(${PNG_INCLUDE_DIR})
 INCLUDE_DIRECTORIES(${JPEG_INCLUDE_DIR})
 
 ADD_EXECUTABLE(png_tilegen png_tilegen.c common.c)
+ADD_EXECUTABLE(packed_tilegen packed_tilegen.c common.c)
 
 TARGET_LINK_LIBRARIES(png_tilegen ${PNG_LIBRARY} ${JPEG_LIBRARY})
+TARGET_LINK_LIBRARIES(packed_tilegen ${PNG_LIBRARY})

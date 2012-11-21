@@ -95,13 +95,13 @@ static void crop_image(img_t *img, int base_offset, FILE *out) {
       // update offset_map for zoom levels > 13
       if (base_offset < 5) {
 	idx = u + v*nr;
-	offset_map[idx + base_offset] = (int) ftell(out);
+	offset_map[idx + offsets[base_offset]] = (int) ftell(out);
       }
 
       ret = open_png_writer(&png, TILE_SIZE/(img->sizeX/img->sizeY));
 
       for (i = 0; i < img->sizeY/nr; i++) {
-	png_row_ptr = (png_bytep) &img->raw_data[u+v*(img->sizeY/nr)*img->sizeX+i*img->sizeX];
+	png_row_ptr = (png_bytep) &img->raw_data[u*TILE_SIZE+v*(img->sizeY/nr)*img->sizeX+i*img->sizeX];
 	png_write_row(png.png_ptr, png_row_ptr);
       }
       close_png_writer(&png);

@@ -128,6 +128,23 @@ static void save_image(img_t *img, char *output_dir) {
   fclose(file);
 }
 
+static void delete_old(int tileX, int tileY, char *output_dir) {
+
+  char filename[1024];
+  int zoom, nr = 1;
+  int x, y;
+  
+  for (zoom = 14; zoom <= 18; zoom++) {
+    nr *= 2;
+
+    for (x = 0; x < nr; x++) {
+      for (y = 0; y < nr; y++) {
+	snprintf(filename, 1024, "%s/%d/%d/%d.jpg", output_dir, zoom, tileX*nr + x, tileY*nr + y);
+	unlink(filename);
+      }
+    }
+  }
+}
 
 int main(int argc, char **argv) {
 
@@ -207,6 +224,9 @@ int main(int argc, char **argv) {
   }
 
   close_packed_file(out_file);
+
+  // temporary code to delete old tile format:
+  delete_old(img.tileX, img.tileY, output_dir);
 
   return 0;
 }

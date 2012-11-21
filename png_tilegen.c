@@ -7,25 +7,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
-#include <zlib.h>
-#include <png.h>
-
-#include <jpeglib.h>
-
 #include "common.h"
-
-typedef struct png_ {
-  FILE *fp;
-  png_structp png_ptr;
-  png_infop info_ptr;
-} png_t;
-
-typedef struct jpg_ {
-  FILE * fp;
-  struct jpeg_compress_struct cinfo;
-  struct jpeg_error_mgr jerr;
-} jpg_t;
-
 
 static int open_png_writer(const char *file, png_t *png, int sizeY) {
   
